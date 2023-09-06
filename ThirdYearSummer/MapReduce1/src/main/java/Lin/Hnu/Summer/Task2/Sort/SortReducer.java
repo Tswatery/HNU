@@ -8,13 +8,15 @@ import org.apache.hadoop.mapreduce.Reducer;
 import java.io.IOException;
 
 public class SortReducer extends Reducer<IntWritable, NullWritable, IntWritable, IntWritable> {
-    private IntWritable outK = new IntWritable();
+    private final IntWritable outK = new IntWritable();
     private Integer cnt = 1;
 
     @Override
     protected void reduce(IntWritable key, Iterable<NullWritable> values, Reducer<IntWritable, NullWritable, IntWritable, IntWritable>.Context context) throws IOException, InterruptedException {
         outK.set(cnt);
         cnt ++;
-        context.write(outK, key);
+        for (NullWritable value : values) {
+            context.write(outK, key);
+        }
     }
 }
